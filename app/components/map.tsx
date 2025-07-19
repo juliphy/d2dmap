@@ -2,7 +2,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline, Polygon } fro
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import { LatLng, LatLngExpression } from "leaflet"
 import { useMapEvents } from "react-leaflet"
 
@@ -11,20 +11,17 @@ type MapProps = {
     mode: "view" | "create" | undefined
     zones: { points: number[][], description: string }[]
     currentPoints: number[][]
-    setCurrentPoints: (points: number[][]) => void
+    setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
 
-// Новый компонент для обработки кликов в режиме create
-function CreateZoneHandler({ mode, setCurrentPoints }: { mode: "view" | "create" | undefined, setCurrentPoints: (points: number[][]) => void }) {
-
+function CreateZoneHandler({ mode, setCurrentPoints }: { mode: "view" | "create" | undefined, setCurrentPoints: Dispatch<SetStateAction<number[][]>> }) {
     useMapEvents({
         click: (e) => {
-            setCurrentPoints((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
+            if (mode === "create") {
+                setCurrentPoints((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
+            }
         },
     });
-
-    if (mode !== "create") return null;
-
     return null;
 }
 
@@ -37,11 +34,7 @@ export default function MyMap(props: MapProps) {
             />
             <FlyTo location={props.location} />
             <LocationMarker />
-
-            {/* Обработчик создания зон */}
             <CreateZoneHandler mode={props.mode} setCurrentPoints={props.setCurrentPoints} />
-
-            {/* Отображение сохранённых зон как полигонов с попапами */}
             {props.zones.map((zone, index) => (
                 <Polygon 
                     key={index} 
@@ -51,8 +44,6 @@ export default function MyMap(props: MapProps) {
                     <Popup>{zone.description || "Без описания"}</Popup>
                 </Polygon>
             ))}
-
-            {/* Отображение текущей создаваемой зоны как линии */}
             {props.mode === "create" && props.currentPoints.length > 0 && (
                 <Polyline 
                     positions={props.currentPoints as LatLngExpression[]} 
@@ -65,13 +56,11 @@ export default function MyMap(props: MapProps) {
 
 function FlyTo({ location }: { location: number[] }) {
     const map = useMap();
-
     useEffect(() => {
         if (location) {
             map.flyTo([location[0], location[1]], 13);
         }
     }, [location, map]);
-
     return null;
 }
 
@@ -83,7 +72,6 @@ function LocationMarker() {
             map.flyTo(e.latlng, map.getZoom())
         },
     })
-
     return position === null ? null : (
         <Marker position={position}>
             <Popup>You are here</Popup>
