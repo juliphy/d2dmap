@@ -16,13 +16,14 @@ type MapProps = {
 
 // Новый компонент для обработки кликов в режиме create
 function CreateZoneHandler({ mode, setCurrentPoints }: { mode: "view" | "create" | undefined, setCurrentPoints: (points: number[][]) => void }) {
-    if (mode !== "create") return null;
 
     useMapEvents({
         click: (e) => {
             setCurrentPoints((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
         },
     });
+
+    if (mode !== "create") return null;
 
     return null;
 }
