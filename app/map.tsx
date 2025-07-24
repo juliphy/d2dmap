@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { useMemo, useState, useEffect } from 'react'
 import { SelectCity, SelectMode } from './components/select'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import Link from 'next/link'
 
 export default function MyPage() {
     const { data: session } = useSession()
@@ -79,5 +80,10 @@ export default function MyPage() {
                 </button>
             </div>
         )}
+        {
+            session?.user.role === "admin" && session && (
+                <Link href="/admin"><a>Create user</a></Link>
+            )
+        }
     </div>
 }
