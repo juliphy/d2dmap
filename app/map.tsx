@@ -80,7 +80,7 @@ export default function MyPage() {
                         }
                     }}
                 >
-                    Сохранить зону
+                    Utwórz zonę
                 </button>
             </div>
         )}
