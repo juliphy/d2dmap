@@ -19,7 +19,7 @@ type ModeOption = {
 };
 
 export function SelectCity(props: SelectCityProps) {
-    return <div className="my-2">
+    return <div className="my-2 text-black">
         <Select onChange={
             (newLocation) => {
                 if (newLocation === null) {
