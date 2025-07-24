@@ -12,7 +12,7 @@ export default function MyPage() {
     const Map = useMemo(() => dynamic(
         () => import('@/app/components/map'),
         { 
-            loading: () => <p>A map is loading</p>,
+            loading: () => <p>Mapa się ładuje...</p>,
             ssr: false
         }
     ), [])
@@ -96,6 +96,6 @@ function AdminButton(props: AdminButtonProps) {
         return <></>
     }
 
-    return <Link className="text-blue-600" href="/admin">Create user</Link>
+    return <Link className="text-blue-600" href="/admin">Kreator kont</Link>
 
 }

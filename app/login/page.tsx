@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
 
   return (
-    <div className="flex flex-col gap-2 max-w-sm mx-auto p-4">
+    <div className="flex flex-col pt-24 gap-4 max-w-sm mx-auto p-4">
       <input
         className="border p-2 rounded"
         type="email"
