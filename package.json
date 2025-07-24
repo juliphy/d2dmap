@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.10.0",
+    "@next-auth/prisma-adapter": "latest",
     "@prisma/client": "latest",
     "bcryptjs": "^3.0.2",
     "leaflet": "^1.9.4",
