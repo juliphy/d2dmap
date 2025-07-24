@@ -33,11 +33,11 @@ export default function MyPage() {
     return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
         <div className="self-end flex gap-4">
             <AdminButton session={session}/>
-            
+
             {session ? (
-                <button className="text-blue-600" onClick={() => signOut()}>Wyjść</button>
+                <button className="text-primary" onClick={() => signOut()}>Wyloguj</button>
             ) : (
-                <button className="text-blue-600" onClick={() => signIn()}>Konto</button>
+                <button className="text-primary" onClick={() => signIn()}>Zaloguj się</button>
             )}
         </div>
         <Map
@@ -56,10 +56,10 @@ export default function MyPage() {
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Napisz opis zony"
+                    placeholder="Wpisz opis strefy"
                 />
                 <button
-                    className="bg-blue-600 text-white py-2 px-4 rounded"
+                    className="btn-primary"
                     onClick={async () => {
                         if (currentPoints.length >= 3) {
                             const res = await fetch('/api/zones', {
@@ -80,7 +80,7 @@ export default function MyPage() {
                         }
                     }}
                 >
-                    Utwórz zonę
+                    Utwórz strefę
                 </button>
             </div>
         )}
@@ -96,6 +96,6 @@ function AdminButton(props: AdminButtonProps) {
         return <></>
     }
 
-    return <Link className="text-blue-600" href="/admin">Kreator kont</Link>
+    return <Link className="text-primary" href="/admin">Panel admina</Link>
 
 }

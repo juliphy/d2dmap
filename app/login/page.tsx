@@ -20,13 +20,13 @@ export default function LoginPage() {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
+        placeholder="Hasło"
       />
       <button
-        className="bg-blue-600 text-white p-2 rounded"
+        className="btn-primary"
         onClick={() => signIn('credentials', { email, password, callbackUrl: '/' })}
       >
-        Sign In
+        Zaloguj się
       </button>
     </div>
   )
