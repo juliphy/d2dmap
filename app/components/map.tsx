@@ -27,7 +27,7 @@ function CreateZoneHandler({ mode, setCurrentPoints }: { mode: "view" | "create"
 
 export default function MyMap(props: MapProps) {
     return (
-        <MapContainer className="w-full h-64 md:h-96" center={{ lat: 51.505, lng: -0.09 }} zoom={13} scrollWheelZoom={true}>
+        <MapContainer className="w-full h-96 md:h-128" center={{ lat: 52, lng: 20 }} zoom={6} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
