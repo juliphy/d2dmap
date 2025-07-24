@@ -9,7 +9,7 @@ import { useMapEvents } from "react-leaflet"
 type MapProps = {
     location: number[]
     mode: "view" | "create" | undefined
-    zones: { points: number[][], description: string }[]
+    zones: { points: number[][], description: string, color: string }[]
     currentPoints: number[][]
     setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
@@ -27,7 +27,7 @@ function CreateZoneHandler({ mode, setCurrentPoints }: { mode: "view" | "create"
 
 export default function MyMap(props: MapProps) {
     return (
-        <MapContainer className="w-[100%] h-128" center={{ lat: 51.505, lng: -0.09 }} zoom={13} scrollWheelZoom={true}>
+        <MapContainer className="w-full h-64 md:h-96" center={{ lat: 51.505, lng: -0.09 }} zoom={13} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -36,10 +36,10 @@ export default function MyMap(props: MapProps) {
             <LocationMarker />
             <CreateZoneHandler mode={props.mode} setCurrentPoints={props.setCurrentPoints} />
             {props.zones.map((zone, index) => (
-                <Polygon 
-                    key={index} 
-                    positions={zone.points as LatLngExpression[]} 
-                    pathOptions={{ color: 'blue', fillColor: 'blue', fillOpacity: 0.5 }}
+                <Polygon
+                    key={index}
+                    positions={zone.points as LatLngExpression[]}
+                    pathOptions={{ color: zone.color, fillColor: zone.color, fillOpacity: 0.5 }}
                 >
                     <Popup>{zone.description || "Без описания"}</Popup>
                 </Polygon>

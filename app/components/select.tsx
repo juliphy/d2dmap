@@ -19,7 +19,7 @@ type ModeOption = {
 };
 
 export function SelectCity(props: SelectCityProps) {
-    return <>
+    return <div className="my-2">
         <Select onChange={
             (newLocation) => {
                 if (newLocation === null) {
@@ -27,9 +27,9 @@ export function SelectCity(props: SelectCityProps) {
                 }
                 props.setLocation(newLocation.value);
             }
-        } 
+        }
         options={city_options}/>
-    </>
+    </div>
 }
 
 export function SelectMode(props: SelectModeProps) {
@@ -40,14 +40,16 @@ export function SelectMode(props: SelectModeProps) {
     ];
     
     return (
+        <div className="my-2">
         <Select
             onChange={(newMode: ModeOption | null) => {
                 if (newMode === null) {
                     return;
                 }
                 props.setMode(newMode.value); // Теперь value — "view" | "create", ошибка ушла
-            }} 
+            }}
             options={options}
         />
+        </div>
     );
 }
