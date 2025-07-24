@@ -12,6 +12,12 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "D2DMap",
   description: "Map for D2D",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#1DB2ED",
+  icons: [
+    { rel: "icon", url: "/logo192.png", sizes: "192x192" },
+    { rel: "apple-touch-icon", url: "/logo512.png", sizes: "512x512" },
+  ],
 };
 
 export default function RootLayout({
