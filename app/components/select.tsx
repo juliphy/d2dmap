@@ -20,7 +20,9 @@ type ModeOption = {
 
 export function SelectCity(props: SelectCityProps) {
     return <div className="my-2 text-black">
-        <Select onChange={
+        <Select 
+        defaultValue={{value: [52.237049, 21.017532], label: "Polska"}}
+        onChange={
             (newLocation) => {
                 if (newLocation === null) {
                     return;
@@ -42,6 +44,7 @@ export function SelectMode(props: SelectModeProps) {
     return (
         <div className="my-2">
         <Select
+            defaultValue={options[0]}
             onChange={(newMode: ModeOption | null) => {
                 if (newMode === null) {
                     return;
