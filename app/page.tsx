@@ -15,7 +15,7 @@ export default function MyPage() {
 
     const [location, setLocation] = useState<number[]>( [51.107883, 17.038538] ); // Default to Wrocław
     const [mapMode, setMapMode] = useState<"view" | "create">();
-    const [zones, setZones] = useState<{ points: number[][], description: string }[]>([]);
+    const [zones, setZones] = useState<{ points: number[][], description: string, color: string }[]>([]);
 
     useEffect(() => {
         fetch('/api/zones')
@@ -25,7 +25,7 @@ export default function MyPage() {
     const [currentPoints, setCurrentPoints] = useState<number[][]>([]);
     const [description, setDescription] = useState<string>("");
 
-    return <div>
+    return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
         <Map 
             location={location} 
             mode={mapMode} 
@@ -36,14 +36,16 @@ export default function MyPage() {
         <SelectCity setLocation={setLocation}/>
         <SelectMode setMode={setMapMode}/>
         {mapMode === "create" && (
-            <div>
-                <input 
-                    type="text" 
-                    value={description} 
-                    onChange={(e) => setDescription(e.target.value)} 
+            <div className="flex flex-col gap-2">
+                <input
+                    className="border p-2 rounded"
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     placeholder="Введите описание зоны"
                 />
                 <button
+                    className="bg-blue-600 text-white py-2 px-4 rounded"
                     onClick={async () => {
                         if (currentPoints.length >= 3) {
                             const res = await fetch('/api/zones', {
