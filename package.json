@@ -7,7 +7,8 @@
     "postinstall": "prisma generate",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed:admin": "ts-node prisma/seed-admin.ts"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "latest",
@@ -33,6 +34,7 @@
     "eslint-config-next": "15.4.2",
     "prisma": "latest",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "ts-node": "^10.9.1"
   }
 }
