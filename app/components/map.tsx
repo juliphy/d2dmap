@@ -2,7 +2,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline, Polygon } fro
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
-import { useEffect, useState, Dispatch, SetStateAction } from "react"
+import { useEffect, useState, Dispatch, SetStateAction, useRef } from "react"
 import { LatLng, LatLngExpression } from "leaflet"
 import { useMapEvents } from "react-leaflet"
 
@@ -27,7 +27,7 @@ function CreateZoneHandler({ mode, setCurrentPoints }: { mode: "view" | "create"
 
 export default function MyMap(props: MapProps) {
     return (
-        <MapContainer className="w-full h-128" center={{ lat: 52, lng: 20 }} zoom={3} scrollWheelZoom={true}>
+        <MapContainer className="w-full h-128" center={{ lat: 52.237049, lng: 21.017532 }} zoom={6} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -56,7 +56,12 @@ export default function MyMap(props: MapProps) {
 
 function FlyTo({ location }: { location: number[] }) {
     const map = useMap();
+    const first = useRef(true);
     useEffect(() => {
+        if (first.current) {
+            first.current = false;
+            return;
+        }
         if (location) {
             map.flyTo([location[0], location[1]], 13);
         }
