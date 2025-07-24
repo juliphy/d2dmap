@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 interface ZoneRecord {
   createdAt: Date
@@ -15,13 +17,18 @@ function zoneColor(createdAt: Date): string {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     const data = await req.json()
     const { points, description } = data
     if (!points || !Array.isArray(points)) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
+    const appendedDesc = `${description} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
     const zone: ZoneRecord = await prisma.zone.create({
-      data: { points, description }
+      data: { points, description: appendedDesc, user: { connect: { id: Number(session.user.id) } } }
     })
     return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
   } catch {

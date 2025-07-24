@@ -3,8 +3,10 @@
 import dynamic from 'next/dynamic'
 import { useMemo, useState, useEffect } from 'react'
 import { SelectCity, SelectMode } from './components/select'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 export default function MyPage() {
+    const { data: session } = useSession()
     const Map = useMemo(() => dynamic(
         () => import('@/app/components/map'),
         { 
@@ -26,16 +28,23 @@ export default function MyPage() {
     const [description, setDescription] = useState<string>("");
 
     return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
-        <Map 
-            location={location} 
-            mode={mapMode} 
-            zones={zones} 
-            currentPoints={currentPoints} 
-            setCurrentPoints={setCurrentPoints} 
+        <div className="self-end flex gap-2">
+            {session ? (
+                <button className="text-blue-600" onClick={() => signOut()}>Sign out</button>
+            ) : (
+                <button className="text-blue-600" onClick={() => signIn()}>Sign in</button>
+            )}
+        </div>
+        <Map
+            location={location}
+            mode={mapMode}
+            zones={zones}
+            currentPoints={currentPoints}
+            setCurrentPoints={setCurrentPoints}
         />
         <SelectCity setLocation={setLocation}/>
         <SelectMode setMode={setMapMode}/>
-        {mapMode === "create" && (
+        {mapMode === "create" && session && (
             <div className="flex flex-col gap-2">
                 <input
                     className="border p-2 rounded"
