@@ -5,6 +5,7 @@ import { useMemo, useState, useEffect } from 'react'
 import { SelectCity, SelectMode } from './components/select'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
+import { Session } from 'next-auth'
 
 export default function MyPage() {
     const { data: session } = useSession()
@@ -15,6 +16,7 @@ export default function MyPage() {
             ssr: false
         }
     ), [])
+
 
     const [location, setLocation] = useState<number[]>( [51.107883, 17.038538] ); // Default to Wrocław
     const [mapMode, setMapMode] = useState<"view" | "create">();
@@ -29,11 +31,13 @@ export default function MyPage() {
     const [description, setDescription] = useState<string>("");
 
     return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
-        <div className="self-end flex gap-2">
+        <div className="self-end flex gap-4">
+            <AdminButton session={session}/>
+            
             {session ? (
-                <button className="text-blue-600" onClick={() => signOut()}>Sign out</button>
+                <button className="text-blue-600" onClick={() => signOut()}>Wyjść</button>
             ) : (
-                <button className="text-blue-600" onClick={() => signIn()}>Sign in</button>
+                <button className="text-blue-600" onClick={() => signIn()}>Konto</button>
             )}
         </div>
         <Map
@@ -52,7 +56,7 @@ export default function MyPage() {
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Введите описание зоны"
+                    placeholder="Napisz opis zony"
                 />
                 <button
                     className="bg-blue-600 text-white py-2 px-4 rounded"
@@ -69,10 +73,10 @@ export default function MyPage() {
                                 setCurrentPoints([])
                                 setDescription("")
                             } else {
-                                alert('Ошибка сохранения зоны')
+                                alert('got error: ' + res.statusText)
                             }
                         } else {
-                            alert("Зона требует минимум 3 точек!");
+                            alert("Należy zaznaczyć co najmniej 3 punkty");
                         }
                     }}
                 >
@@ -80,10 +84,18 @@ export default function MyPage() {
                 </button>
             </div>
         )}
-        {
-            session?.user.role === "admin" && session && (
-                <Link href="/admin"><a>Create user</a></Link>
-            )
-        }
     </div>
+}
+
+type AdminButtonProps = {
+    session: Session | null
+}
+
+function AdminButton(props: AdminButtonProps) {
+    if (!props.session || props.session.user.role !== "ADMIN") {
+        return <></>
+    }
+
+    return <Link className="text-blue-600" href="/admin">Create user</Link>
+
 }
