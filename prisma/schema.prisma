@@ -11,5 +11,6 @@ model Zone {
   id          Int      @id @default(autoincrement())
   points      Json
   description String
+  createdAt   DateTime @default(now())
 }
 
