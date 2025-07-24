@@ -30,10 +30,10 @@ export default function Admin() {
 
   return (
     <div className="flex flex-col gap-2 max-w-sm mx-auto p-4">
-      <input className="border p-2 rounded" value={name} onChange={e=>setName(e.target.value)} placeholder="Name" />
+      <input className="border p-2 rounded" value={name} onChange={e=>setName(e.target.value)} placeholder="Imię" />
       <input className="border p-2 rounded" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
-      <button className="bg-blue-600 text-white p-2 rounded" onClick={createUser}>Create User</button>
-      {password && <div>Password: {password}</div>}
+      <button className="btn-primary" onClick={createUser}>Utwórz użytkownika</button>
+      {password && <div className="mt-2">Hasło: {password}</div>}
     </div>
   )
 }
