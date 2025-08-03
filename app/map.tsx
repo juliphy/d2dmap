@@ -20,7 +20,7 @@ export default function MyPage() {
 
     const [location, setLocation] = useState<number[]>( [52.237049, 21.017532] ); // Default to Poland
     const [mapMode, setMapMode] = useState<"view" | "create">();
-    const [zones, setZones] = useState<{ points: number[][], description: string, color: string }[]>([]);
+    const [zones, setZones] = useState<{ points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string }[]>([]);
 
     useEffect(() => {
         fetch('/api/zones')
@@ -28,7 +28,10 @@ export default function MyPage() {
             .then(data => setZones(data));
     }, []);
     const [currentPoints, setCurrentPoints] = useState<number[][]>([]);
-    const [description, setDescription] = useState<string>("");
+    const [name, setName] = useState<string>("");
+    const [hoursFR, setHoursFR] = useState<string>("");
+    const [fullPZ, setFullPZ] = useState<string>("");
+    const [pz35Plus, setPz35Plus] = useState<string>("");
 
     return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
         <div className="self-end flex gap-4">
@@ -54,9 +57,30 @@ export default function MyPage() {
                 <input
                     className="border p-2 rounded"
                     type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Wpisz opis strefy"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Nazwa strefy"
+                />
+                <input
+                    className="border p-2 rounded"
+                    type="number"
+                    value={hoursFR}
+                    onChange={(e) => setHoursFR(e.target.value)}
+                    placeholder="Ile godzin FR pracowali"
+                />
+                <input
+                    className="border p-2 rounded"
+                    type="number"
+                    value={fullPZ}
+                    onChange={(e) => setFullPZ(e.target.value)}
+                    placeholder="Ile PZ pełnych"
+                />
+                <input
+                    className="border p-2 rounded"
+                    type="number"
+                    value={pz35Plus}
+                    onChange={(e) => setPz35Plus(e.target.value)}
+                    placeholder="Ile PZ 35+"
                 />
                 <button
                     className="btn-primary"
@@ -65,13 +89,22 @@ export default function MyPage() {
                             const res = await fetch('/api/zones', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ points: currentPoints, description })
+                                body: JSON.stringify({
+                                    points: currentPoints,
+                                    name,
+                                    hoursFR: Number(hoursFR),
+                                    fullPZ: Number(fullPZ),
+                                    pz35Plus: Number(pz35Plus)
+                                })
                             })
                             if (res.ok) {
                                 const newZone = await res.json()
                                 setZones([...zones, newZone])
                                 setCurrentPoints([])
-                                setDescription("")
+                                setName("")
+                                setHoursFR("")
+                                setFullPZ("")
+                                setPz35Plus("")
                             } else {
                                 alert('got error: ' + res.statusText)
                             }
