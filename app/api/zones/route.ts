@@ -5,6 +5,8 @@ import { authOptions } from '@/lib/auth'
 
 interface ZoneRecord {
   createdAt: Date
+  duration?: number
+  durationUnit?: string
   [key: string]: unknown
 }
 
@@ -22,13 +24,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     const data = await req.json()
-    const { points, description } = data
+    const { points, description, duration, durationUnit } = data
     if (!points || !Array.isArray(points)) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
     const appendedDesc = `${description} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
     const zone: ZoneRecord = await prisma.zone.create({
-      data: { points, description: appendedDesc, user: { connect: { id: Number(session.user.id) } } }
+      data: {
+        points,
+        description: appendedDesc,
+        duration,
+        durationUnit,
+        user: { connect: { id: Number(session.user.id) } }
+      }
     })
     return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
   } catch {

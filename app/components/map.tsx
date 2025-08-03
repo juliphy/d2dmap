@@ -6,10 +6,18 @@ import { useEffect, useState, Dispatch, SetStateAction, useRef } from "react"
 import { LatLng, LatLngExpression } from "leaflet"
 import { useMapEvents } from "react-leaflet"
 
+export type Zone = {
+    points: number[][]
+    description: string
+    color: string
+    duration?: number
+    durationUnit?: 'days' | 'weeks' | 'months'
+}
+
 type MapProps = {
     location: number[]
     mode: "view" | "create" | undefined
-    zones: { points: number[][], description: string, color: string }[]
+    zones: Zone[]
     currentPoints: number[][]
     setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
