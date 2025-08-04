@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     if (!points || !Array.isArray(points)) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
-    const efficiency = hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0
+    const efficiency = (hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0).toFixed(2)
     const appendedName = `${name}`
     const yellowStatusDate = calculateStatusDate(Number(yellowDuration), yellowUnit)
     const greenStatusDate = calculateStatusDate(Number(greenDuration), greenUnit)

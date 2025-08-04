@@ -11,6 +11,8 @@ export default function Zones() {
         hoursFR: number,
         fullPZ: number,
         pz35Plus: number,
+        yellowStatusDate: Date,
+        greenStatusDate: Date,
         efficiency: number,
         color: string,
         user: { name: string }
@@ -41,7 +43,11 @@ export default function Zones() {
 
                     {/* RIGHT SIDE: Name and Date */}
                     <div className="flex flex-col justify-between text-right w-40">
-                        <p className="text-sm text-gray-500">{formatDate(new Date(zone.createdAt))}</p>
+                        <div>
+                        <p className="text-sm text-red-500">{formatDate(new Date(zone.createdAt))}</p>
+                        <p className="text-sm text-yellow-500">{formatDate(new Date(zone.yellowStatusDate))}</p>
+                        <p className="text-sm text-green-500">{formatDate(new Date(zone.greenStatusDate))}</p>
+                        </div>
                         <div className="flex ml-6 flex-row gap-4 items-right">
                             <Link className="text-primary cursor-pointer antialiased font-medium" href={`/map?zoneId=${zone.id}`}>Pokaż strefę</Link>
                             <Image
