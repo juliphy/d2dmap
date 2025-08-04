@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-
+import Image from "next/image";
+import trashIcon from "@/public/trash.svg"
 export default function Zones() {
     const [zones, setZones] = useState<{ 
         points: number[][],
@@ -39,7 +40,10 @@ export default function Zones() {
                     <div className="flex flex-col justify-between text-right w-40">
                         <p className="text-sm text-gray-500">{formatDate(new Date(zone.createdAt))}</p>
                         <h1 className="text-lg font-bold">{zone.name}</h1>
-                        <a className="text-primary cursor-pointer antialiased font-medium">Go to zone</a>
+                        <div className="flex ml-6 flex-row gap-4 items-right">
+                            <a className="text-primary cursor-pointer antialiased font-medium">Pokaż strefę</a>
+                            <Image className="cursor-pointer" color="#1CABE2" src={trashIcon} alt="delete zone" width={24} height={24}/>
+                        </div>
                     </div>
                 </div>
             ))}

@@ -1,3 +1,4 @@
+'use client'
 import AdminNavbar from "@/app/components/navbar";
 import { SessionProvider } from "next-auth/react";
 import UsersCreatePage from "./usersCreate";
