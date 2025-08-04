@@ -6,6 +6,7 @@ import { SelectCity, SelectMode } from './components/select'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { Session } from 'next-auth'
+import { useSearchParams } from 'next/navigation'
 
 export default function MyPage() {
     const { data: session } = useSession()
@@ -20,13 +21,26 @@ export default function MyPage() {
 
     const [location, setLocation] = useState<number[]>( [52.237049, 21.017532] ); // Default to Poland
     const [mapMode, setMapMode] = useState<"view" | "create">();
-    const [zones, setZones] = useState<{ points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]>([]);
+    const [zones, setZones] = useState<{ id: number, points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]>([]);
+    const searchParams = useSearchParams();
+    const zoneIdParam = searchParams.get('zoneId');
 
     useEffect(() => {
         fetch('/api/zones')
             .then(res => res.json())
             .then(data => setZones(data));
     }, []);
+
+    useEffect(() => {
+        if (zoneIdParam && zones.length > 0) {
+            const zone = zones.find(z => z.id === Number(zoneIdParam));
+            if (zone) {
+                const lat = zone.points.reduce((sum, p) => sum + p[0], 0) / zone.points.length;
+                const lng = zone.points.reduce((sum, p) => sum + p[1], 0) / zone.points.length;
+                setLocation([lat, lng]);
+            }
+        }
+    }, [zoneIdParam, zones]);
     const [currentPoints, setCurrentPoints] = useState<number[][]>([]);
     const [name, setName] = useState<string>("");
     const [hoursFR, setHoursFR] = useState<string>("");

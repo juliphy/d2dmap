@@ -66,3 +66,22 @@ export async function GET() {
   const result = zones.map((z: Zone) => ({ ...z, color: zoneColor(z.createdAt) }))
   return NextResponse.json(result)
 }
+
+export async function DELETE(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const id = req.nextUrl.searchParams.get('id')
+  if (!id) {
+    return NextResponse.json({ error: 'Missing id' }, { status: 400 })
+  }
+
+  try {
+    await prisma.zone.delete({ where: { id: Number(id) } })
+    return NextResponse.json({ success: true })
+  } catch {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+  }
+}
