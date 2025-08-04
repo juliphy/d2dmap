@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { Zone } from '@prisma/client'
 
 interface ZoneRecord {
   createdAt: Date
@@ -46,7 +47,15 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const zones: ZoneRecord[] = await prisma.zone.findMany()
-  const result = zones.map((z: ZoneRecord) => ({ ...z, color: zoneColor(z.createdAt) }))
+  const zones = await prisma.zone.findMany({
+    include: {
+      user: {
+        select: {
+          name: true
+        }
+      }
+    }
+  })
+  const result = zones.map((z: Zone) => ({ ...z, color: zoneColor(z.createdAt) }))
   return NextResponse.json(result)
 }

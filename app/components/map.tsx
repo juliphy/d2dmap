@@ -5,11 +5,12 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import { useEffect, useState, Dispatch, SetStateAction, useRef } from "react"
 import { LatLng, LatLngExpression } from "leaflet"
 import { useMapEvents } from "react-leaflet"
+import { User } from "@prisma/client"
 
 type MapProps = {
     location: number[]
     mode: "view" | "create" | undefined
-    zones: { points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string }[]
+    zones: { points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: User }[]
     currentPoints: number[][]
     setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
@@ -43,11 +44,13 @@ export default function MyMap(props: MapProps) {
                 >
                     <Popup>
                         <div>
-                            <p>Nazwa: {zone.name}</p>
-                            <p>Godziny FR: {zone.hoursFR}</p>
-                            <p>PZ pełnych: {zone.fullPZ}</p>
-                            <p>PZ 35+: {zone.pz35Plus}</p>
-                            <p>Efektywność: {zone.efficiency.toFixed(2)}</p>
+                            <p><s>Nazwa:</s> {zone.name}<br/>
+                            <s>Godziny FR:</s> {zone.hoursFR}<br/>
+                            <s>PZ pełnych:</s> {zone.fullPZ}<br/>
+                            <s>PZ 35+:</s> {zone.pz35Plus}<br/>
+                            <s>Efektywność:</s> {zone.efficiency.toFixed(2)}<br/>
+                            <s>Wysłane przez:</s> {zone.user.name}
+                            </p>
                         </div>
                     </Popup>
                 </Polygon>
