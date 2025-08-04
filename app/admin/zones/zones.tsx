@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import trashIcon from "@/public/trash.svg"
 export default function Zones() {
-    const [zones, setZones] = useState<{ 
+    const [zones, setZones] = useState<{
+        id: number,
         points: number[][],
         createdAt: Date,
         name: string,
@@ -23,8 +25,8 @@ export default function Zones() {
     return (
         <div className="flex flex-col items-center gap-6">
             {zones.map((zone) => (
-                <div 
-                    key={zone.createdAt.toString()} 
+                <div
+                    key={zone.id}
                     className="flex justify-between items-stretch border rounded-2xl p-4 shadow-md dark:bg-[#181818] border-[#818181] relative w-full max-w-xl"
                 >
                     {/* LEFT SIDE: Info */}
@@ -41,8 +43,23 @@ export default function Zones() {
                         <p className="text-sm text-gray-500">{formatDate(new Date(zone.createdAt))}</p>
                         <h1 className="text-lg font-bold">{zone.name}</h1>
                         <div className="flex ml-6 flex-row gap-4 items-right">
-                            <a className="text-primary cursor-pointer antialiased font-medium">Pokaż strefę</a>
-                            <Image className="cursor-pointer" color="#1CABE2" src={trashIcon} alt="delete zone" width={24} height={24}/>
+                            <Link className="text-primary cursor-pointer antialiased font-medium" href={`/map?zoneId=${zone.id}`}>Pokaż strefę</Link>
+                            <Image
+                                className="cursor-pointer"
+                                color="#1CABE2"
+                                src={trashIcon}
+                                alt="delete zone"
+                                width={24}
+                                height={24}
+                                onClick={async () => {
+                                    const res = await fetch(`/api/zones?id=${zone.id}`, {
+                                        method: 'DELETE'
+                                    });
+                                    if (res.ok) {
+                                        setZones(prev => prev.filter(z => z.id !== zone.id));
+                                    }
+                                }}
+                            />
                         </div>
                     </div>
                 </div>

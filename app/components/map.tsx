@@ -9,7 +9,7 @@ import { useMapEvents } from "react-leaflet"
 type MapProps = {
     location: number[]
     mode: "view" | "create" | undefined
-    zones: { points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]
+    zones: { id: number, points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]
     currentPoints: number[][]
     setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
@@ -35,9 +35,9 @@ export default function MyMap(props: MapProps) {
             <FlyTo location={props.location} />
             <LocationMarker />
             <CreateZoneHandler mode={props.mode} setCurrentPoints={props.setCurrentPoints} />
-            {props.zones.map((zone, index) => (
+            {props.zones.map((zone) => (
                 <Polygon
-                    key={index}
+                    key={zone.id}
                     positions={zone.points as LatLngExpression[]}
                     pathOptions={{ color: zone.color, fillColor: zone.color, fillOpacity: 0.5 }}
                 >
