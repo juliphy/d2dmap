@@ -9,7 +9,7 @@ import { useMapEvents } from "react-leaflet"
 type MapProps = {
     location: number[]
     mode: "view" | "create" | undefined
-    zones: { points: number[][], description: string, color: string }[]
+    zones: { points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string }[]
     currentPoints: number[][]
     setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
@@ -41,7 +41,15 @@ export default function MyMap(props: MapProps) {
                     positions={zone.points as LatLngExpression[]}
                     pathOptions={{ color: zone.color, fillColor: zone.color, fillOpacity: 0.5 }}
                 >
-                    <Popup>{zone.description || "Без описания"}</Popup>
+                    <Popup>
+                        <div>
+                            <p>Nazwa: {zone.name}</p>
+                            <p>Godziny FR: {zone.hoursFR}</p>
+                            <p>PZ pełnych: {zone.fullPZ}</p>
+                            <p>PZ 35+: {zone.pz35Plus}</p>
+                            <p>Efektywność: {zone.efficiency.toFixed(2)}</p>
+                        </div>
+                    </Popup>
                 </Polygon>
             ))}
             {props.mode === "create" && props.currentPoints.length > 0 && (

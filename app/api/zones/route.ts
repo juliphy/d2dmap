@@ -22,13 +22,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     const data = await req.json()
-    const { points, description } = data
+    const { points, name, hoursFR, fullPZ, pz35Plus } = data
     if (!points || !Array.isArray(points)) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
-    const appendedDesc = `${description} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
+    const efficiency = hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0
+    const appendedName = `${name} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
     const zone: ZoneRecord = await prisma.zone.create({
-      data: { points, description: appendedDesc, user: { connect: { id: Number(session.user.id) } } }
+      data: {
+        points,
+        name: appendedName,
+        hoursFR,
+        fullPZ,
+        pz35Plus,
+        efficiency,
+        user: { connect: { id: Number(session.user.id) } }
+      }
     })
     return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
   } catch {
