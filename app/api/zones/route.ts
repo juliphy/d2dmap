@@ -27,16 +27,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
     const efficiency = hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0
-    const appendedName = `${name} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
     const zone: ZoneRecord = await prisma.zone.create({
       data: {
         points,
-        name: appendedName,
+        name,
         hoursFR,
         fullPZ,
         pz35Plus,
         efficiency,
         user: { connect: { id: Number(session.user.id) } }
+      },
+      include: {
+        user: {
+          select: { name: true }
+        }
       }
     })
     return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
@@ -46,7 +50,15 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const zones: ZoneRecord[] = await prisma.zone.findMany()
-  const result = zones.map((z: ZoneRecord) => ({ ...z, color: zoneColor(z.createdAt) }))
+  const zones = await prisma.zone.findMany({
+    include: {
+      user: {
+        select: {
+          name: true
+        }
+      }
+    }
+  })
+  const result = zones.map((z) => ({ ...z, color: zoneColor(z.createdAt) }))
   return NextResponse.json(result)
 }
