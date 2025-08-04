@@ -44,12 +44,12 @@ export default function MyMap(props: MapProps) {
                 >
                     <Popup>
                         <div>
-                            <p><s>Nazwa:</s> {zone.name}<br/>
-                            <s>Godziny FR:</s> {zone.hoursFR}<br/>
-                            <s>PZ pełnych:</s> {zone.fullPZ}<br/>
-                            <s>PZ 35+:</s> {zone.pz35Plus}<br/>
-                            <s>Efektywność:</s> {zone.efficiency.toFixed(2)}<br/>
-                            <s>Wysłane przez:</s> {zone.user.name}
+                            <p><b>Nazwa:</b> {zone.name}<br/>
+                            <b>Godziny FR:</b> {zone.hoursFR}<br/>
+                            <b>PZ pełnych:</b> {zone.fullPZ}<br/>
+                            <b>PZ 35+:</b> {zone.pz35Plus}<br/>
+                            <b>Efektywność:</b> {zone.efficiency.toFixed(2)}<br/>
+                            <b>Wysłane przez:</b> {zone.user.name}
                             </p>
                         </div>
                     </Popup>
