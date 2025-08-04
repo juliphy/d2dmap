@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Session } from 'next-auth'
 import { useSearchParams } from 'next/navigation'
 
-export default function MyPage() {
+export default function MapPage() {
     const { data: session } = useSession()
     const Map = useMemo(() => dynamic(
         () => import('@/app/components/map'),
