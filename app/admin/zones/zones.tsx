@@ -6,17 +6,20 @@ export default function Zones() {
     const [zones, setZones] = useState<{
         id: number,
         points: number[][],
-        createdAt: Date,
+        createdAt: string,
         name: string,
         hoursFR: number,
         fullPZ: number,
         pz35Plus: number,
-        yellowStatusDate: Date,
-        greenStatusDate: Date,
+        yellowStatusDate: string,
+        greenStatusDate: string,
         efficiency: number,
         color: string,
         user: { name: string }
     }[]>([]);
+    const [userFilter, setUserFilter] = useState("all")
+    const [colorFilter, setColorFilter] = useState("all")
+    const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest")
 
     useEffect(() => {
         fetch('/api/zones')
@@ -28,10 +31,51 @@ export default function Zones() {
         return <h1>Brak stref</h1>
     }
 
+    const users = Array.from(new Set(zones.map(z => z.user.name)))
+
+    const filteredZones = zones
+        .filter(z => userFilter === "all" || z.user.name === userFilter)
+        .filter(z => colorFilter === "all" || z.color === colorFilter)
+        .sort((a, b) =>
+            sortOrder === "newest"
+                ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        )
+
     return (
         <div className="flex flex-col items-center gap-6">
             <Link className="text-primary" href="/admin/zones/table">Przejdż do widoka tabeli</Link>
-            {zones.map((zone) => (
+            <div className="flex flex-wrap gap-4">
+                <select
+                    value={userFilter}
+                    onChange={e => setUserFilter(e.target.value)}
+                    className="border p-2"
+                >
+                    <option value="all">Wszyscy</option>
+                    {users.map(u => (
+                        <option key={u} value={u}>{u}</option>
+                    ))}
+                </select>
+                <select
+                    value={colorFilter}
+                    onChange={e => setColorFilter(e.target.value)}
+                    className="border p-2"
+                >
+                    <option value="all">Wszystkie kolory</option>
+                    <option value="red">Czerwone</option>
+                    <option value="yellow">Żółte</option>
+                    <option value="green">Zielone</option>
+                </select>
+                <select
+                    value={sortOrder}
+                    onChange={e => setSortOrder(e.target.value as "newest" | "oldest")}
+                    className="border p-2"
+                >
+                    <option value="newest">Najnowsze</option>
+                    <option value="oldest">Najstarsze</option>
+                </select>
+            </div>
+            {filteredZones.map((zone) => (
                 <div
                     key={zone.id}
                     className="flex justify-between items-stretch border rounded-2xl p-4 shadow-md dark:bg-[#181818] border-[#818181] relative w-full max-w-xl"
@@ -78,7 +122,7 @@ export default function Zones() {
 }
 
 type ZoneColorDatesType = {
-    dates: Date[]
+    dates: string[]
 }
 
 function ZoneColorDates(props: ZoneColorDatesType) {
@@ -88,7 +132,7 @@ function ZoneColorDates(props: ZoneColorDatesType) {
 
     const curDate = new Date()
 
-    if (props.dates[2] < curDate) {
+    if (new Date(props.dates[2]) < curDate) {
         return (
             <>
             <p className="text-sm text-red-500">{formatDate(new Date(props.dates[0]))}</p>
@@ -96,7 +140,7 @@ function ZoneColorDates(props: ZoneColorDatesType) {
             <p className="text-sm text-green-500">● {formatDate(new Date(props.dates[2]))}</p>
             </>
         )
-    } else if (props.dates[1] < curDate) {
+    } else if (new Date(props.dates[1]) < curDate) {
         return (
             <>
             <p className="text-sm text-red-500">{formatDate(new Date(props.dates[0]))}</p>
