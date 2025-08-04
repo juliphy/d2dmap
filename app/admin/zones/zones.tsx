@@ -23,9 +23,14 @@ export default function Zones() {
             .then(res => res.json())
             .then(data => setZones(data));
     }, []);
+    
+    if (!zones) {
+        return <h1>Brak stref</h1>
+    }
 
     return (
         <div className="flex flex-col items-center gap-6">
+            <Link className="text-primary" href="/admin/zones/table">Przejdż do widoka tabeli</Link>
             {zones.map((zone) => (
                 <div
                     key={zone.id}
@@ -44,9 +49,7 @@ export default function Zones() {
                     {/* RIGHT SIDE: Name and Date */}
                     <div className="flex flex-col justify-between text-right w-40">
                         <div>
-                        <p className="text-sm text-red-500">{formatDate(new Date(zone.createdAt))}</p>
-                        <p className="text-sm text-yellow-500">{formatDate(new Date(zone.yellowStatusDate))}</p>
-                        <p className="text-sm text-green-500">{formatDate(new Date(zone.greenStatusDate))}</p>
+                        <ZoneColorDates dates={[zone.createdAt, zone.yellowStatusDate, zone.greenStatusDate]}/>
                         </div>
                         <div className="flex ml-6 flex-row gap-4 items-right">
                             <Link className="text-primary cursor-pointer antialiased font-medium" href={`/map?zoneId=${zone.id}`}>Pokaż strefę</Link>
@@ -72,6 +75,44 @@ export default function Zones() {
             ))}
         </div>
     )
+}
+
+type ZoneColorDatesType = {
+    dates: Date[]
+}
+
+function ZoneColorDates(props: ZoneColorDatesType) {
+    if (props.dates.length !== 3) {
+        return <h1>Bad props for ZoneColorDates</h1>
+    }
+
+    const curDate = new Date()
+
+    if (props.dates[2] < curDate) {
+        return (
+            <>
+            <p className="text-sm text-red-500">{formatDate(new Date(props.dates[0]))}</p>
+            <p className="text-sm text-yellow-500">{formatDate(new Date(props.dates[1]))}</p>
+            <p className="text-sm text-green-500">● {formatDate(new Date(props.dates[2]))}</p>
+            </>
+        )
+    } else if (props.dates[1] < curDate) {
+        return (
+            <>
+            <p className="text-sm text-red-500">{formatDate(new Date(props.dates[0]))}</p>
+            <p className="text-sm text-yellow-500">● {formatDate(new Date(props.dates[1]))}</p>
+            <p className="text-sm text-green-500">{formatDate(new Date(props.dates[2]))}</p>
+            </>
+        )
+    } else {
+        return (
+            <>
+            <p className="text-sm text-red-500">● {formatDate(new Date(props.dates[0]))}</p>
+            <p className="text-sm text-yellow-500">{formatDate(new Date(props.dates[1]))}</p>
+            <p className="text-sm text-green-500">{formatDate(new Date(props.dates[2]))}</p>
+            </>
+        )
+    }
 }
 
 function formatDate(d: Date): string {
