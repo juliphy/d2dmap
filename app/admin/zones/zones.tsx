@@ -132,7 +132,7 @@ function ZoneColorDates(props: ZoneColorDatesType) {
 
     const curDate = new Date()
 
-    if (props.dates[2] < curDate) {
+    if (new Date(props.dates[2]) < curDate) {
         return (
             <>
             <p className="text-sm text-red-500">{formatDate(new Date(props.dates[0]))}</p>
@@ -140,7 +140,7 @@ function ZoneColorDates(props: ZoneColorDatesType) {
             <p className="text-sm text-green-500">● {formatDate(new Date(props.dates[2]))}</p>
             </>
         )
-    } else if (props.dates[1] < curDate) {
+    } else if (new Date(props.dates[1]) < curDate) {
         return (
             <>
             <p className="text-sm text-red-500">{formatDate(new Date(props.dates[0]))}</p>
