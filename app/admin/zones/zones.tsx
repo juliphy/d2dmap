@@ -31,6 +31,7 @@ export default function Zones() {
                 >
                     {/* LEFT SIDE: Info */}
                     <div className="flex flex-col justify-center gap-2">
+                        <h1 className="font-semibold">{zone.name}</h1>
                         <p>PZ: <span className="font-medium">{zone.fullPZ}</span></p>
                         <p>PZ+35: <span className="font-medium">{zone.pz35Plus}</span></p>
                         <p>Efektywność: <span className="font-medium">{zone.efficiency}</span></p>
@@ -41,7 +42,6 @@ export default function Zones() {
                     {/* RIGHT SIDE: Name and Date */}
                     <div className="flex flex-col justify-between text-right w-40">
                         <p className="text-sm text-gray-500">{formatDate(new Date(zone.createdAt))}</p>
-                        <h1 className="text-lg font-bold">{zone.name}</h1>
                         <div className="flex ml-6 flex-row gap-4 items-right">
                             <Link className="text-primary cursor-pointer antialiased font-medium" href={`/map?zoneId=${zone.id}`}>Pokaż strefę</Link>
                             <Image

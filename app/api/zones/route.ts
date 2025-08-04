@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
     const efficiency = hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0
-    const appendedName = `${name} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
+    const appendedName = `${name}`
     const zone: ZoneRecord = await prisma.zone.create({
       data: {
         points,
