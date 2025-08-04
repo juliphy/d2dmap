@@ -129,6 +129,6 @@ function AdminButton(props: AdminButtonProps) {
         return <></>
     }
 
-    return <Link className="text-primary" href="/admin">Panel admina</Link>
+    return <Link className="text-primary" href="/admin/zones">Panel admina</Link>
 
 }

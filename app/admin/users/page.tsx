@@ -1,13 +1,16 @@
 'use client'
 
 import { SessionProvider } from "next-auth/react";
-import Admin from "./admin";
+
+import AdminNavbar from "@/app/components/navbar";
+import UsersCreatePage from "./usersCreate";
 
 export default function AdminPage() {
   return (
     <>
+    <AdminNavbar/>
     <SessionProvider>
-      <Admin/>
+      <UsersCreatePage/>
     </SessionProvider>
     </>
   )
