@@ -19,8 +19,16 @@ export default function MapPage() {
     ), [])
 
 
-    const [location, setLocation] = useState<number[]>( [52.237049, 21.017532] ); // Default to Poland
+
+    const [location, setLocationState] = useState<number[]>( [52.237049, 21.017532] ); // Default to Poland
+    const [zoom, setZoom] = useState<number>(13);
     const [mapMode, setMapMode] = useState<"view" | "create">();
+
+    const setLocationAndZoom = (coords: number[], zoomLevel = 13) => {
+        setLocationState(coords);
+        setZoom(zoomLevel);
+    };
+
     const [zones, setZones] = useState<{ id: number, points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]>([]);
     const searchParams = useSearchParams();
     const zoneIdParam = searchParams.get('zoneId');
@@ -37,7 +45,7 @@ export default function MapPage() {
             if (zone) {
                 const lat = zone.points.reduce((sum, p) => sum + p[0], 0) / zone.points.length;
                 const lng = zone.points.reduce((sum, p) => sum + p[1], 0) / zone.points.length;
-                setLocation([lat, lng]);
+                setLocationAndZoom([lat, lng], 16);
             }
         }
     }, [zoneIdParam, zones]);
@@ -59,12 +67,15 @@ export default function MapPage() {
         </div>
         <Map
             location={location}
+
+            zoom={zoom}
             mode={mapMode}
             zones={zones}
             currentPoints={currentPoints}
             setCurrentPoints={setCurrentPoints}
         />
-        <SelectCity setLocation={setLocation}/>
+        <SelectCity setLocation={(coords) => setLocationAndZoom(coords)}/>
+
         <SelectMode setMode={setMapMode}/>
         {mapMode === "create" && session && (
             <div className="flex flex-col gap-2">

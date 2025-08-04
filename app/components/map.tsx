@@ -8,6 +8,7 @@ import { useMapEvents } from "react-leaflet"
 
 type MapProps = {
     location: number[]
+    zoom: number
     mode: "view" | "create" | undefined
     zones: { id: number, points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]
     currentPoints: number[][]
@@ -32,7 +33,7 @@ export default function MyMap(props: MapProps) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <FlyTo location={props.location} />
+            <FlyTo location={props.location} zoom={props.zoom} />
             <LocationMarker />
             <CreateZoneHandler mode={props.mode} setCurrentPoints={props.setCurrentPoints} />
             {props.zones.map((zone) => (
@@ -64,7 +65,7 @@ export default function MyMap(props: MapProps) {
     );
 }
 
-function FlyTo({ location }: { location: number[] }) {
+function FlyTo({ location, zoom }: { location: number[], zoom: number }) {
     const map = useMap();
     const first = useRef(true);
     useEffect(() => {
@@ -73,9 +74,9 @@ function FlyTo({ location }: { location: number[] }) {
             return;
         }
         if (location) {
-            map.flyTo([location[0], location[1]], 13);
+            map.flyTo([location[0], location[1]], zoom);
         }
-    }, [location, map]);
+    }, [location, map, zoom]);
     return null;
 }
 
