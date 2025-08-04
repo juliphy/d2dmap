@@ -54,6 +54,10 @@ export default function MapPage() {
     const [hoursFR, setHoursFR] = useState<string>("");
     const [fullPZ, setFullPZ] = useState<string>("");
     const [pz35Plus, setPz35Plus] = useState<string>("");
+    const [yellowValue, setYellowValue] = useState<string>("");
+    const [yellowUnit, setYellowUnit] = useState<'weeks' | 'months'>('weeks');
+    const [greenValue, setGreenValue] = useState<string>("");
+    const [greenUnit, setGreenUnit] = useState<'weeks' | 'months'>('weeks');
 
     return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
         <div className="self-end flex gap-4">
@@ -107,6 +111,62 @@ export default function MapPage() {
                     onChange={(e) => setPz35Plus(e.target.value)}
                     placeholder="Ile PZ 35+"
                 />
+                <div className="flex items-center gap-2">
+                    <span>Żółty</span>
+                    <input
+                        className="border p-2 rounded w-20"
+                        type="number"
+                        value={yellowValue}
+                        onChange={(e) => setYellowValue(e.target.value)}
+                        placeholder="Ilość"
+                    />
+                    <label className="flex items-center gap-1">
+                        <input
+                            type="radio"
+                            name="yellowUnit"
+                            checked={yellowUnit === 'weeks'}
+                            onChange={() => setYellowUnit('weeks')}
+                        />
+                        tygodni
+                    </label>
+                    <label className="flex items-center gap-1">
+                        <input
+                            type="radio"
+                            name="yellowUnit"
+                            checked={yellowUnit === 'months'}
+                            onChange={() => setYellowUnit('months')}
+                        />
+                        miesięcy
+                    </label>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span>Zielony</span>
+                    <input
+                        className="border p-2 rounded w-20"
+                        type="number"
+                        value={greenValue}
+                        onChange={(e) => setGreenValue(e.target.value)}
+                        placeholder="Ilość"
+                    />
+                    <label className="flex items-center gap-1">
+                        <input
+                            type="radio"
+                            name="greenUnit"
+                            checked={greenUnit === 'weeks'}
+                            onChange={() => setGreenUnit('weeks')}
+                        />
+                        tygodni
+                    </label>
+                    <label className="flex items-center gap-1">
+                        <input
+                            type="radio"
+                            name="greenUnit"
+                            checked={greenUnit === 'months'}
+                            onChange={() => setGreenUnit('months')}
+                        />
+                        miesięcy
+                    </label>
+                </div>
                 <button
                     className="btn-primary"
                     onClick={async () => {
@@ -119,7 +179,11 @@ export default function MapPage() {
                                     name,
                                     hoursFR: Number(hoursFR),
                                     fullPZ: Number(fullPZ),
-                                    pz35Plus: Number(pz35Plus)
+                                    pz35Plus: Number(pz35Plus),
+                                    yellowDuration: Number(yellowValue),
+                                    yellowUnit,
+                                    greenDuration: Number(greenValue),
+                                    greenUnit
                                 })
                             })
                             if (res.ok) {
@@ -130,6 +194,10 @@ export default function MapPage() {
                                 setHoursFR("")
                                 setFullPZ("")
                                 setPz35Plus("")
+                                setYellowValue("")
+                                setYellowUnit('weeks')
+                                setGreenValue("")
+                                setGreenUnit('weeks')
                             } else {
                                 alert('got error: ' + res.statusText)
                             }
