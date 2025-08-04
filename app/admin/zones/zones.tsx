@@ -25,7 +25,7 @@ export default function Zones() {
             {zones.map((zone) => (
                 <div 
                     key={zone.createdAt.toString()} 
-                    className="flex justify-between items-stretch border rounded-2xl p-4 shadow-md bg-[#181818] border-[#818181] relative w-full max-w-xl"
+                    className="flex justify-between items-stretch border rounded-2xl p-4 shadow-md dark:bg-[#181818] border-[#818181] relative w-full max-w-xl"
                 >
                     {/* LEFT SIDE: Info */}
                     <div className="flex flex-col justify-center gap-2">
