@@ -20,7 +20,7 @@ export default function MyPage() {
 
     const [location, setLocation] = useState<number[]>( [52.237049, 21.017532] ); // Default to Poland
     const [mapMode, setMapMode] = useState<"view" | "create">();
-    const [zones, setZones] = useState<{ points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string }[]>([]);
+    const [zones, setZones] = useState<{ points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]>([]);
 
     useEffect(() => {
         fetch('/api/zones')
