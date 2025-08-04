@@ -5,12 +5,11 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import { useEffect, useState, Dispatch, SetStateAction, useRef } from "react"
 import { LatLng, LatLngExpression } from "leaflet"
 import { useMapEvents } from "react-leaflet"
-import { User } from "@prisma/client"
 
 type MapProps = {
     location: number[]
     mode: "view" | "create" | undefined
-    zones: { points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: User }[]
+    zones: { points: number[][], name: string, hoursFR: number, fullPZ: number, pz35Plus: number, efficiency: number, color: string, user: { name: string } }[]
     currentPoints: number[][]
     setCurrentPoints: Dispatch<SetStateAction<number[][]>>
 }
