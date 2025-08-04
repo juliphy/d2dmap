@@ -38,7 +38,14 @@ export async function POST(req: NextRequest) {
         pz35Plus,
         efficiency,
         user: { connect: { id: Number(session.user.id) } }
-      }
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
     })
     return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
   } catch {
