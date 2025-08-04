@@ -5,15 +5,26 @@ import { authOptions } from '@/lib/auth'
 import { Zone } from '@prisma/client'
 
 interface ZoneRecord {
-  createdAt: Date
+  yellowStatusDate: Date
+  greenStatusDate: Date
   [key: string]: unknown
 }
 
-function zoneColor(createdAt: Date): string {
-  const weeks = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24 * 7)
-  if (weeks >= 12) return 'green'
-  if (weeks >= 6) return 'yellow'
+function zoneColor(zone: { yellowStatusDate: Date; greenStatusDate: Date }): string {
+  const now = new Date()
+  if (now >= zone.greenStatusDate) return 'green'
+  if (now >= zone.yellowStatusDate) return 'yellow'
   return 'red'
+}
+
+function calculateStatusDate(duration: number, unit: 'weeks' | 'months'): Date {
+  const date = new Date()
+  if (unit === 'weeks') {
+    date.setDate(date.getDate() + duration * 7)
+  } else {
+    date.setMonth(date.getMonth() + duration)
+  }
+  return date
 }
 
 export async function POST(req: NextRequest) {
@@ -23,12 +34,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     const data = await req.json()
-    const { points, name, hoursFR, fullPZ, pz35Plus } = data
+    const { points, name, hoursFR, fullPZ, pz35Plus, yellowDuration, yellowUnit, greenDuration, greenUnit } = data
     if (!points || !Array.isArray(points)) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
-    const efficiency = hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0
+    const efficiencyStr = (hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0).toFixed(2)
+    const efficiency = +efficiencyStr
     const appendedName = `${name}`
+    const yellowStatusDate = calculateStatusDate(Number(yellowDuration), yellowUnit)
+    const greenStatusDate = calculateStatusDate(Number(greenDuration), greenUnit)
     const zone: ZoneRecord = await prisma.zone.create({
       data: {
         points,
@@ -37,6 +51,8 @@ export async function POST(req: NextRequest) {
         fullPZ,
         pz35Plus,
         efficiency,
+        yellowStatusDate,
+        greenStatusDate,
         user: { connect: { id: Number(session.user.id) } }
       },
       include: {
@@ -47,7 +63,7 @@ export async function POST(req: NextRequest) {
         },
       },
     })
-    return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
+    return NextResponse.json({ ...zone, color: zoneColor(zone) })
   } catch {
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
@@ -63,7 +79,7 @@ export async function GET() {
       }
     }
   })
-  const result = zones.map((z: Zone) => ({ ...z, color: zoneColor(z.createdAt) }))
+  const result = zones.map((z: Zone) => ({ ...z, color: zoneColor(z) }))
   return NextResponse.json(result)
 }
 
