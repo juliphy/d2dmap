@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { Zone } from '@prisma/client'
 
 interface ZoneRecord {
   createdAt: Date
@@ -28,16 +27,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
     const efficiency = hoursFR ? (fullPZ + pz35Plus) / hoursFR : 0
-    const appendedName = `${name} Od: ${session.user?.name ?? ''} ${new Date().toLocaleDateString('pl-PL')}`
     const zone: ZoneRecord = await prisma.zone.create({
       data: {
         points,
-        name: appendedName,
+        name,
         hoursFR,
         fullPZ,
         pz35Plus,
         efficiency,
         user: { connect: { id: Number(session.user.id) } }
+      },
+      include: {
+        user: {
+          select: { name: true }
+        }
       }
     })
     return NextResponse.json({ ...zone, color: zoneColor(zone.createdAt) })
@@ -56,6 +59,6 @@ export async function GET() {
       }
     }
   })
-  const result = zones.map((z: Zone) => ({ ...z, color: zoneColor(z.createdAt) }))
+  const result = zones.map((z) => ({ ...z, color: zoneColor(z.createdAt) }))
   return NextResponse.json(result)
 }
