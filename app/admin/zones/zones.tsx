@@ -51,7 +51,7 @@ export default function Zones() {
                     onChange={e => setUserFilter(e.target.value)}
                     className="border p-2"
                 >
-                    <option value="all">Wszyscy</option>
+                    <option className="text-black" value="all">Wszyscy</option>
                     {users.map(u => (
                         <option className="text-black" key={u} value={u}>{u}</option>
                     ))}
