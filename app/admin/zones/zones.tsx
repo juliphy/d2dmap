@@ -49,7 +49,7 @@ export default function Zones() {
                 <select
                     value={userFilter}
                     onChange={e => setUserFilter(e.target.value)}
-                    className="border p-2"
+                    className="border p-2 text-black"
                 >
                     <option value="all">Wszyscy</option>
                     {users.map(u => (
@@ -59,7 +59,7 @@ export default function Zones() {
                 <select
                     value={colorFilter}
                     onChange={e => setColorFilter(e.target.value)}
-                    className="border p-2"
+                    className="border p-2 text-black"
                 >
                     <option value="all">Wszystkie kolory</option>
                     <option value="red">Czerwone</option>
@@ -69,7 +69,7 @@ export default function Zones() {
                 <select
                     value={sortOrder}
                     onChange={e => setSortOrder(e.target.value as "newest" | "oldest")}
-                    className="border p-2"
+                    className="border p-2 text-black"
                 >
                     <option value="newest">Najnowsze</option>
                     <option value="oldest">Najstarsze</option>
