@@ -1,58 +1,76 @@
-import Select from "react-select";
+import { useState } from "react";
 
-const city_options = [
-    {value: [51.107883, 17.038538], label: "Wrocław"},
-    {value: [52.237049, 21.017532], label: "Warszawa"}
-]
+// Coordinates for supported cities
+const cities: { name: string; coords: number[] }[] = [
+    { name: "Wrocław", coords: [51.107883, 17.038538] },
+    { name: "Warszawa", coords: [52.237049, 21.017532] },
+];
 
 type SelectCityProps = {
-    setLocation: (location: number[]) => void
-}
+    // Allows passing optional zoom level when changing location
+    setLocation: (location: number[], zoom?: number) => void;
+};
 
 type SelectModeProps = {
-    setMode: (mode: "view" | "create") => void
-}
-
-type ModeOption = {
-    value: "view" | "create";
-    label: string;
+    setMode: (mode: "view" | "create") => void;
 };
 
 export function SelectCity(props: SelectCityProps) {
-    return <div className="my-2 text-black">
-        <Select 
-        defaultValue={{value: [52.237049, 21.017532], label: "Polska"}}
-        onChange={
-            (newLocation) => {
-                if (newLocation === null) {
-                    return;
-                }
-                props.setLocation(newLocation.value);
-            }
+    const [selected, setSelected] = useState<string | null>(null);
+
+    const toggleCity = (city: string, coords: number[]) => {
+        if (selected === city) {
+            setSelected(null);
+            // Reset to whole Poland view
+            props.setLocation([52.237049, 21.017532], 6);
+        } else {
+            setSelected(city);
+            props.setLocation(coords, 13);
         }
-        options={city_options}/>
-    </div>
+    };
+
+    return (
+        <div className="flex gap-4 justify-center my-2">
+            {cities.map((city) => (
+                <label key={city.name} className="flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        checked={selected === city.name}
+                        onChange={() => toggleCity(city.name, city.coords)}
+                    />
+                    {city.name}
+                </label>
+            ))}
+        </div>
+    );
 }
 
 export function SelectMode(props: SelectModeProps) {
+    const [mode, setMode] = useState<"view" | "create">("view");
 
-    const options: ModeOption[] = [
-        { value: "view", label: "Przegląd" },
-        { value: "create", label: "Tworzenie" }
-    ];
-    
+    const handleClick = (newMode: "view" | "create") => {
+        setMode(newMode);
+        props.setMode(newMode);
+    };
+
     return (
-        <div className="my-2">
-        <Select
-            defaultValue={options[0]}
-            onChange={(newMode: ModeOption | null) => {
-                if (newMode === null) {
-                    return;
-                }
-                props.setMode(newMode.value); // Теперь value — "view" | "create", ошибка ушла
-            }}
-            options={options}
-        />
+        <div className="flex justify-center my-2">
+            <button
+                className={`px-4 py-2 border rounded-l ${
+                    mode === "create" ? "bg-primary text-white" : "bg-white text-black"
+                }`}
+                onClick={() => handleClick("create")}
+            >
+                Tworzenie
+            </button>
+            <button
+                className={`px-4 py-2 border rounded-r ${
+                    mode === "view" ? "bg-primary text-white" : "bg-white text-black"
+                }`}
+                onClick={() => handleClick("view")}
+            >
+                Przegląd
+            </button>
         </div>
     );
 }

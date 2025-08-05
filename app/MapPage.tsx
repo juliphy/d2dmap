@@ -20,9 +20,9 @@ export default function MapPage() {
 
 
 
-    const [location, setLocationState] = useState<number[]>( [52.237049, 21.017532] ); // Default to Poland
-    const [zoom, setZoom] = useState<number>(13);
-    const [mapMode, setMapMode] = useState<"view" | "create">();
+    const [location, setLocationState] = useState<number[]>([52.237049, 21.017532]); // Center of Poland
+    const [zoom, setZoom] = useState<number>(6); // Show whole Poland initially
+    const [mapMode, setMapMode] = useState<"view" | "create">("view");
 
     const setLocationAndZoom = (coords: number[], zoomLevel = 13) => {
         setLocationState(coords);
@@ -69,6 +69,7 @@ export default function MapPage() {
                 <button className="text-primary" onClick={() => signIn()}>Zaloguj się</button>
             )}
         </div>
+        <SelectMode setMode={setMapMode}/>
         <Map
             location={location}
 
@@ -78,9 +79,7 @@ export default function MapPage() {
             currentPoints={currentPoints}
             setCurrentPoints={setCurrentPoints}
         />
-        <SelectCity setLocation={(coords) => setLocationAndZoom(coords)}/>
-
-        <SelectMode setMode={setMapMode}/>
+        <SelectCity setLocation={(coords, zoom) => setLocationAndZoom(coords, zoom)}/>
         {mapMode === "create" && session && (
             <div className="flex flex-col gap-2">
                 <input
