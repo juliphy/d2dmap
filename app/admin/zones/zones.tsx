@@ -49,30 +49,30 @@ export default function Zones() {
                 <select
                     value={userFilter}
                     onChange={e => setUserFilter(e.target.value)}
-                    className="border p-2 text-black"
+                    className="border p-2"
                 >
                     <option value="all">Wszyscy</option>
                     {users.map(u => (
-                        <option key={u} value={u}>{u}</option>
+                        <option className="text-black" key={u} value={u}>{u}</option>
                     ))}
                 </select>
                 <select
                     value={colorFilter}
                     onChange={e => setColorFilter(e.target.value)}
-                    className="border p-2 text-black"
+                    className="border p-2"
                 >
-                    <option value="all">Wszystkie kolory</option>
-                    <option value="red">Czerwone</option>
-                    <option value="yellow">Żółte</option>
-                    <option value="green">Zielone</option>
+                    <option className="text-black" value="all">Wszystkie kolory</option>
+                    <option className="text-black" value="red">Czerwone</option>
+                    <option className="text-black" value="yellow">Żółte</option>
+                    <option className="text-black" value="green">Zielone</option>
                 </select>
                 <select
                     value={sortOrder}
                     onChange={e => setSortOrder(e.target.value as "newest" | "oldest")}
-                    className="border p-2 text-black"
+                    className="border p-2"
                 >
-                    <option value="newest">Najnowsze</option>
-                    <option value="oldest">Najstarsze</option>
+                    <option className="text-black" value="newest">Najnowsze</option>
+                    <option className="text-black" value="oldest">Najstarsze</option>
                 </select>
             </div>
             {filteredZones.map((zone) => (
