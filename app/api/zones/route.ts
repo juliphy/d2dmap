@@ -38,18 +38,23 @@ export async function POST(req: NextRequest) {
     if (!points || !Array.isArray(points)) {
       return NextResponse.json({ error: 'Invalid points' }, { status: 400 })
     }
-    const efficiencyStr = (hoursFR ? fullPZ / hoursFR : 0).toFixed(2)
+    const hoursFRNum = Math.max(0, Number(hoursFR))
+    const fullPZNum = Math.max(0, Number(fullPZ))
+    const pz35PlusNum = Math.max(0, Number(pz35Plus))
+    const yellowDurationNum = Math.max(0, Number(yellowDuration))
+    const greenDurationNum = Math.max(0, Number(greenDuration))
+    const efficiencyStr = (hoursFRNum ? fullPZNum / hoursFRNum : 0).toFixed(2)
     const efficiency = +efficiencyStr
     const appendedName = `${name}`
-    const yellowStatusDate = calculateStatusDate(Number(yellowDuration), yellowUnit)
-    const greenStatusDate = calculateStatusDate(Number(greenDuration), greenUnit)
+    const yellowStatusDate = calculateStatusDate(yellowDurationNum, yellowUnit)
+    const greenStatusDate = calculateStatusDate(greenDurationNum, greenUnit)
     const zone: ZoneRecord = await prisma.zone.create({
       data: {
         points,
         name: appendedName,
-        hoursFR,
-        fullPZ,
-        pz35Plus,
+        hoursFR: hoursFRNum,
+        fullPZ: fullPZNum,
+        pz35Plus: pz35PlusNum,
         efficiency,
         yellowStatusDate,
         greenStatusDate,

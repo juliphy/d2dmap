@@ -93,6 +93,7 @@ export default function MapPage() {
                 <input
                     className="border p-2 rounded"
                     type="number"
+                    min="0"
                     value={hoursFR}
                     onChange={(e) => setHoursFR(e.target.value)}
                     placeholder="Ile godzin FR pracowali"
@@ -100,6 +101,7 @@ export default function MapPage() {
                 <input
                     className="border p-2 rounded"
                     type="number"
+                    min="0"
                     value={fullPZ}
                     onChange={(e) => setFullPZ(e.target.value)}
                     placeholder="Ile PZ pełnych"
@@ -107,6 +109,7 @@ export default function MapPage() {
                 <input
                     className="border p-2 rounded"
                     type="number"
+                    min="0"
                     value={pz35Plus}
                     onChange={(e) => setPz35Plus(e.target.value)}
                     placeholder="Ile PZ 35+"
@@ -116,6 +119,7 @@ export default function MapPage() {
                     <input
                         className="border p-2 rounded w-20"
                         type="number"
+                        min="0"
                         value={yellowValue}
                         onChange={(e) => setYellowValue(e.target.value)}
                         placeholder="Ilość"
@@ -144,6 +148,7 @@ export default function MapPage() {
                     <input
                         className="border p-2 rounded w-20"
                         type="number"
+                        min="0"
                         value={greenValue}
                         onChange={(e) => setGreenValue(e.target.value)}
                         placeholder="Ilość"
@@ -177,12 +182,12 @@ export default function MapPage() {
                                 body: JSON.stringify({
                                     points: currentPoints,
                                     name,
-                                    hoursFR: Number(hoursFR),
-                                    fullPZ: Number(fullPZ),
-                                    pz35Plus: Number(pz35Plus),
-                                    yellowDuration: Number(yellowValue),
+                                    hoursFR: Math.max(0, Number(hoursFR)),
+                                    fullPZ: Math.max(0, Number(fullPZ)),
+                                    pz35Plus: Math.max(0, Number(pz35Plus)),
+                                    yellowDuration: Math.max(0, Number(yellowValue)),
                                     yellowUnit,
-                                    greenDuration: Number(greenValue),
+                                    greenDuration: Math.max(0, Number(greenValue)),
                                     greenUnit
                                 })
                             })
