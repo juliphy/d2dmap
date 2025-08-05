@@ -1,4 +1,4 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline, Polygon } from "react-leaflet"
+import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline, Polygon, CircleMarker } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
@@ -55,10 +55,18 @@ export default function MyMap(props: MapProps) {
                     </Popup>
                 </Polygon>
             ))}
-            {props.mode === "create" && props.currentPoints.length > 0 && (
-                <Polyline 
-                    positions={props.currentPoints as LatLngExpression[]} 
-                    pathOptions={{ color: 'red' }} 
+            {props.mode === "create" && props.currentPoints.map((point, index) => (
+                <CircleMarker
+                    key={index}
+                    center={point as LatLngExpression}
+                    radius={5}
+                    pathOptions={{ color: 'red', fillColor: 'red' }}
+                />
+            ))}
+            {props.mode === "create" && props.currentPoints.length > 1 && (
+                <Polyline
+                    positions={props.currentPoints as LatLngExpression[]}
+                    pathOptions={{ color: 'red' }}
                 />
             )}
         </MapContainer>
