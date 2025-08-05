@@ -34,10 +34,15 @@ export default function MapPage() {
     const zoneIdParam = searchParams.get('zoneId');
 
     useEffect(() => {
+        if (!session) {
+            setZones([])
+            return
+        }
         fetch('/api/zones')
-            .then(res => res.json())
-            .then(data => setZones(data));
-    }, []);
+            .then(res => res.ok ? res.json() : [])
+            .then(data => setZones(data))
+            .catch(() => setZones([]))
+    }, [session]);
 
     useEffect(() => {
         if (zoneIdParam && zones.length > 0) {
