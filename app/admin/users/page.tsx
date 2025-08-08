@@ -11,17 +11,20 @@ import { User } from "@prisma/client";
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
-          fetch('/api/users')
-              .then(res => res.json())
-              .then(data => setUsers(data));
-      }, []);
+    async function loadUsers() {
+      const res = await fetch('/api/users')
+      const data = await res.json()
+      setUsers(data)
+    }
+    loadUsers()
+  }, [])
   return (
     <>
     <AdminNavbar/>
     <SessionProvider>
       <div className="flex flex-col items-center">
         <Link className="font-medium text-primary" href="/admin/users/create">Chcesz stworzyć konto?</Link>
-        <Users users={users}/>
+        <Users users={users} setUsers={setUsers} />
       </div>
     </SessionProvider>
     </>

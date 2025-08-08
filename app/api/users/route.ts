@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ password: passwordPlain })
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions)
 
   if (!session || session.user.role !== 'ADMIN') {
@@ -42,36 +42,35 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const {originalEmail, name, email, passwordChangeRequest } = await req.json()
-  
+  const { originalEmail, name, email, passwordChangeRequest } = await req.json()
+
   if (passwordChangeRequest) {
     const passwordPlain = Math.random().toString(36).slice(-8)
     const password = await hash(passwordPlain, 10)
-    
-    const user = prisma.user.update({
+
+    await prisma.user.update({
       where: {
-        email: originalEmail
+        email: originalEmail,
       },
       data: {
         email: email,
         password: password,
-        name: name
-      }
+        name: name,
+      },
     })
 
-    return NextResponse.json({name: name, email: email, password: passwordPlain})
+    return NextResponse.json({ name: name, email: email, password: passwordPlain })
   } else {
-
-    const user = prisma.user.update({
-        where: {
-          email: originalEmail
-        },
-        data: {
-          email: email,
-          name: name
-        }
-      })
-    return NextResponse.json({name: name, email: email})
+    await prisma.user.update({
+      where: {
+        email: originalEmail,
+      },
+      data: {
+        email: email,
+        name: name,
+      },
+    })
+    return NextResponse.json({ name: name, email: email })
   }
 }
 
@@ -87,7 +86,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 })
   }
 
-  const user = await prisma.user.delete({
+  await prisma.user.delete({
     where: {
       email: email
     }

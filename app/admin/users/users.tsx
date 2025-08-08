@@ -1,38 +1,66 @@
 import { User } from "@prisma/client"
-import trashIcon from "@/public/trash.svg"
-import Image from "next/image"
-import { useState } from "react"
+import { Dispatch, SetStateAction } from "react"
+import UserItem from "./UserItem"
 
-type UsersProps = {
-    users: User[]
+export type UsersProps = {
+  users: User[]
+  setUsers: Dispatch<SetStateAction<User[]>>
 }
 
-export default function Users(props: UsersProps) {
-    const [users, setUsers] = useState<User[]>(props.users)
-
-    async function handleDelete(userEmail: string) {
-        const res = await fetch(`/api/users?email=${userEmail}`, {
-            method: 'DELETE'
-        });
-        if (res.ok) {
-            // Remove user from local state
-            setUsers(users.filter(user => user.email !== userEmail))
-        } else {
-            // handle error (optional)
-            alert("Failed to delete user")
-        }
+export default function Users({ users, setUsers }: UsersProps) {
+  async function handleDelete(userEmail: string) {
+    const res = await fetch(`/api/users?email=${userEmail}`, {
+      method: "DELETE",
+    })
+    if (res.ok) {
+      setUsers((prev) => prev.filter((user) => user.email !== userEmail))
+    } else {
+      alert("Failed to delete user")
     }
-    return (
-        <div className="flex flex-col items-center gap-4 pt-6 items-stretch">
-            {
-                props.users.map((user) => (
-                    <div key={user.id} className="rounded border-1 border-[#818181] p-5">
-                        <h1>Imię: {user.name}</h1>
-                        <h2>Email: {user.email}</h2>
-                        <Image width={24} height={24} alt="delete user" src={trashIcon} onClick={() => handleDelete(user.email)}/>
-                    </div>
-                ))
-            }
-        </div>
-    )
+  }
+
+  async function handleUpdate(
+    originalEmail: string,
+    name: string,
+    email: string,
+    passwordChangeRequest: boolean
+  ) {
+    const res = await fetch(`/api/users`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        originalEmail,
+        name,
+        email,
+        passwordChangeRequest,
+      }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      setUsers((prev) =>
+        prev.map((user) =>
+          user.email === originalEmail
+            ? { ...user, name: data.name, email: data.email }
+            : user
+        )
+      )
+      return data.password as string | undefined
+    } else {
+      alert("Failed to update user")
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-4 pt-6 items-stretch">
+      {users.map((user) => (
+        <UserItem
+          key={user.id}
+          user={user}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+        />
+      ))}
+    </div>
+  )
 }
+
