@@ -123,7 +123,7 @@ export default function MapPage() {
                     <input
                         className="border p-2 rounded w-20"
                         type="number"
-                        min="0"
+                        min="1"
                         value={yellowValue}
                         onChange={(e) => setYellowValue(e.target.value)}
                         placeholder="Ilość"
@@ -152,7 +152,7 @@ export default function MapPage() {
                     <input
                         className="border p-2 rounded w-20"
                         type="number"
-                        min="0"
+                        min="1"
                         value={greenValue}
                         onChange={(e) => setGreenValue(e.target.value)}
                         placeholder="Ilość"
