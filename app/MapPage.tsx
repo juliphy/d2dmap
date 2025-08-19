@@ -63,6 +63,16 @@ export default function MapPage() {
     const [yellowUnit, setYellowUnit] = useState<'weeks' | 'months'>('weeks');
     const [greenValue, setGreenValue] = useState<string>("");
     const [greenUnit, setGreenUnit] = useState<'weeks' | 'months'>('weeks');
+    const [showInstallMessage, setShowInstallMessage] = useState(false);
+
+    useEffect(() => {
+        const nav = window.navigator as { standalone?: boolean };
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || nav.standalone;
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent);
+        if (!isStandalone && isMobile) {
+            setShowInstallMessage(true);
+        }
+    }, []);
 
     return <div className="p-4 flex flex-col gap-4 max-w-screen-md mx-auto">
         <div className="self-end flex gap-4">
@@ -217,6 +227,11 @@ export default function MapPage() {
                 >
                     Utwórz strefę
                 </button>
+            </div>
+        )}
+        {showInstallMessage && (
+            <div className="fixed bottom-0 left-0 right-0 bg-blue-500 text-white text-center p-2">
+                Add this app to your home screen for quick access
             </div>
         )}
     </div>
